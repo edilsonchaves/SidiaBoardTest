@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7dbe64e241f364cac80a1167a7d534, type: 3}
+  m_Name: Tank
+  m_EditorClassIdentifier: 
+  name: Tank
+  renderer: {fileID: 3352226709070242768, guid: bd83eda8b6f04424388e1b51f9e05dc1,
+    type: 3}
+  health: 30
+  attack: 5
+  colorP1: {r: 0.6037736, g: 0, b: 0.5422124, a: 0}
+  colorP2: {r: 0, g: 1, b: 0.93666506, a: 0}
