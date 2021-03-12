@@ -12,9 +12,13 @@ public class PlayerScript : MonoBehaviour
     [Header("Player Movement")]
     int basicmovementPlayer = 3;
     [SerializeField]int _currentMovementPlayer;
+    [SerializeField] int _currentHealthPlayer;
+    [SerializeField] int _currentAttackPlayer;
     [SerializeField] GameObject destiny;
     [SerializeField] float velMove;
     [SerializeField] bool _isMove;
+    [SerializeField] ParticleSystem particles;
+    [SerializeField] AudioSource audioPlayer;
     public bool IsMove
     {
         get
@@ -34,8 +38,29 @@ public class PlayerScript : MonoBehaviour
         }
         set
         {
-            Debug.Log(value);
             _currentMovementPlayer = value;
+        }
+    }
+    public int CurrentHealthPlayer
+    {
+        get
+        {
+            return _currentHealthPlayer;
+        }
+        set
+        {
+            _currentHealthPlayer = value;
+        }
+    }
+    public int CurrentAttackPlayer
+    {
+        get
+        {
+            return _currentAttackPlayer;
+        }
+        set
+        {
+            _currentAttackPlayer = value;
         }
     }
     // Start is called before the first frame update
@@ -51,7 +76,19 @@ public class PlayerScript : MonoBehaviour
             if (Vector3.Distance(this.transform.position, destiny.transform.position) == 0)
             {
                 IsMove = false;
+                this.transform.SetParent(destiny.transform);
+                if (destiny.GetComponent<TileScript>().GetColectable() != null)
+                {
+                    destiny.GetComponent<TileScript>().PlayParticleGetColectable();
+                }
+                destiny.GetComponent<TileScript>().RemoveColectable();
                 destiny = null;
+                particles.Stop();
+                if (audioPlayer.isPlaying)
+                {
+                    audioPlayer.Stop();
+                }
+
             }
         }
     }
@@ -71,6 +108,8 @@ public class PlayerScript : MonoBehaviour
     {
         playerData.InitializePlayer();
         renderObjeto.material.color = playerData.PlayerColor;
+        _currentHealthPlayer = playerData.HealthInitial;
+        _currentAttackPlayer = playerData.AttackInitial;
     }
     public void InitialPositionPlayer(Transform tilePosition, int widthPosition, int heigthPostion)
     {
@@ -78,10 +117,16 @@ public class PlayerScript : MonoBehaviour
         gameObject.transform.localPosition = Vector3.zero;
         widthPos = widthPosition;
         heigthPos = heigthPostion;
+        tilePosition.GetComponent<TileScript>().RemoveColectable();
+    }
+    public void ReinitiateAttack()
+    {
+        _currentAttackPlayer = playerData.AttackInitial;
     }
     public void InitiatePersonTurn()
     {
         _currentMovementPlayer = basicmovementPlayer;
+        
     }
     public int GetWidth()
     {
@@ -92,12 +137,41 @@ public class PlayerScript : MonoBehaviour
         return heigthPos;
     }
 
-    public void setDestinyPlayer (GameObject newDestiny)
+    public void SetDestinyPlayer (GameObject newDestiny)
     {
         destiny = newDestiny;
         _isMove = true;
         widthPos = newDestiny.GetComponent<TileScript>().GetWidth();
         heigthPos = newDestiny.GetComponent<TileScript>().GetHeigth();
+        particles.Play();
+        if (ManagerGame.Instance.IsMusic)
+        {
+            audioPlayer.Play();
+        }
+    }
+
+
+    public bool CollectColetable()
+    {
+        Colectable col= destiny.GetComponent<TileScript>().GetColectable();
+        if (col != null)
+        {
+            switch (col.typeColectable)
+            {
+                case "Movement":
+                    _currentMovementPlayer += col.forceEffect * col.rarity;
+                    break;
+                case "Attack":
+                    _currentAttackPlayer += col.forceEffect * col.rarity;
+                    break;
+                case "Health":
+                    _currentHealthPlayer += col.forceEffect * col.rarity;
+                    break;
+
+            }
+            return true;
+        }
+        return false;
     }
 }
 

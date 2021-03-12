@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613efe4a62c8e514d84502b5626336f6, type: 3}
   m_Name: ColectableAttack
   m_EditorClassIdentifier: 
-  typeColectable: 0
-  forcaEfeito: 2
+  typeColectable: 1
+  forcaEfeito: 1
   colorTileColectable: {r: 1, g: 0.33490568, b: 0.6914243, a: 0}

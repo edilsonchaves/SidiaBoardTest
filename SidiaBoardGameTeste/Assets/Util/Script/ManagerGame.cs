@@ -34,6 +34,7 @@ public class ManagerGame : MonoBehaviour
         {
             _widthValue = 16;
             _heigthValue = 16;
+            _isMusic = true;
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }

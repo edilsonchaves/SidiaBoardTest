@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 public class GameScript : MonoBehaviour
 {
     [SerializeField] GameObject playerPrefab;
     [SerializeField] BoardConstructor board;
+    [SerializeField] BattleSystem battleSystem;
     [SerializeField] GameObject[] players;
     [SerializeField] GameObject camViewReference;
     enum TurnoEnum {Player1,Player2}
     [SerializeField]TurnoEnum turno;
-
     enum GameStatusEnum { MovementCamera,MovementPlayer,Game,Battle}
     [SerializeField] GameStatusEnum gameStatus;
     int playerTurn;
     [SerializeField]CinemachineVirtualCamera cam;
     [SerializeField] GameCanvas gameCanvas;
+    [SerializeField] float numberCollectable;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,10 +48,29 @@ public class GameScript : MonoBehaviour
                         if (hit.collider.gameObject.transform.childCount == 1 && approvedMove)
                         {
                             players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer -= 1;
-                            gameCanvas.PlayerMovementUI(players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer, turno.ToString());
                             gameStatus = GameStatusEnum.MovementPlayer;
-                            players[playerTurn].GetComponent<PlayerScript>().setDestinyPlayer(hit.collider.gameObject);
-                            
+                            players[playerTurn].GetComponent<PlayerScript>().SetDestinyPlayer(hit.collider.gameObject);
+                            bool isColetable=players[playerTurn].GetComponent<PlayerScript>().CollectColetable();
+                            if (isColetable)
+                            {
+                                numberCollectable--;
+                                int percentual=PercentualRateCollectable();
+                                if (percentual <= 10)
+                                {
+                                    RefillColletable();
+                                }
+                                gameCanvas.PlayerMovementUI(players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer, turno.ToString());
+                                if (playerTurn == 0)
+                                {
+                                    gameCanvas.Player1UI(players[playerTurn].GetComponent<PlayerScript>());
+                                }
+                                else
+                                {
+                                    gameCanvas.Player2UI(players[playerTurn].GetComponent<PlayerScript>());
+                                }
+                            }
+                            gameCanvas.PlayerMovementUI(players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer, turno.ToString());
+
                         }
                         else
                         {
@@ -65,6 +86,16 @@ public class GameScript : MonoBehaviour
             {
                 if (OrtogonalCheckBattle(players))
                 {
+
+                    gameCanvas.ActivateBattleUI(players,playerTurn);
+                    if (playerTurn == 0)
+                    {
+                        battleSystem.InitiateBattleSystem(3, players[0].GetComponent<PlayerScript>(), players[1].GetComponent<PlayerScript>());
+                    }
+                    else
+                    {
+                        battleSystem.InitiateBattleSystem(3, players[1].GetComponent<PlayerScript>(), players[0].GetComponent<PlayerScript>());
+                    }
                     gameStatus = GameStatusEnum.Battle;
                 }
                 else
@@ -72,15 +103,63 @@ public class GameScript : MonoBehaviour
                     gameStatus = GameStatusEnum.Game;
                     if (players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer == 0)
                     {
+                        players[playerTurn].GetComponent<PlayerScript>().ReinitiateAttack();
                         ChangeTurn();
                         ChangeCamFollow();
                         gameCanvas.PlayerMovementUI(players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer, turno.ToString());
+                        gameCanvas.Player1UI(players[0].GetComponent<PlayerScript>());
+                        gameCanvas.Player2UI(players[1].GetComponent<PlayerScript>());
                     }
                 }
             }
         }
+        if(gameStatus== GameStatusEnum.Battle)
+        {
+            if (!gameCanvas.battleCanvas.activeSelf)
+            {
+                if (players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer == 0)
+                {
+                    players[playerTurn].GetComponent<PlayerScript>().ReinitiateAttack();
+                    ChangeTurn();
+                    ChangeCamFollow();
+                    gameCanvas.PlayerMovementUI(players[playerTurn].GetComponent<PlayerScript>().CurrentMovementPlayer, turno.ToString());
+                }
+                gameCanvas.Player1UI(players[0].GetComponent<PlayerScript>());
+                gameCanvas.Player2UI(players[1].GetComponent<PlayerScript>());
+
+                if(players[0].GetComponent<PlayerScript>().CurrentHealthPlayer<=0 || players[1].GetComponent<PlayerScript>().CurrentHealthPlayer <= 0)
+                {
+                    gameCanvas.ActiveEndGameUI();
+                    if (players[0].GetComponent<PlayerScript>().CurrentHealthPlayer <= 0)
+                    {
+                        gameCanvas.WinnerUIEndGame(players[1].GetComponent<PlayerScript>());
+                    }
+                    else
+                    {
+                        gameCanvas.WinnerUIEndGame(players[0].GetComponent<PlayerScript>());
+                    }
+                }
+                else
+                {
+                    gameStatus = GameStatusEnum.Game;
+                }
+
+            }
+        }
     }
 
+    int PercentualRateCollectable()
+    {
+        float percentual = (numberCollectable / (ManagerGame.Instance.WidthValue * ManagerGame.Instance.HeigthValue)) * 100;
+        Debug.Log(Mathf.RoundToInt(percentual) + "%");
+        return Mathf.RoundToInt(percentual);
+    }
+
+    public void RefillColletable()
+    {
+        board.refillTileColectable();
+        numberCollectable = ManagerGame.Instance.WidthValue * ManagerGame.Instance.HeigthValue - 2;
+    }
     bool OrtogonalCheck(PlayerScript player, TileScript tileSelect)
     {
         if(player.GetWidth()+1 == tileSelect.GetWidth() || player.GetWidth() -1 == tileSelect.GetWidth())
@@ -140,6 +219,7 @@ public class GameScript : MonoBehaviour
     {
         players = new GameObject[2];
         board.InstantiateBoardGame();
+        numberCollectable = ManagerGame.Instance.WidthValue * ManagerGame.Instance.HeigthValue - 2;
         GameObject p1 = Instantiate(playerPrefab);
         p1.GetComponent<PlayerScript>().initiatePerson(ManagerGame.Instance.playersGame[0]);
         int randomPosWidthP1 = Random.Range(0, ManagerGame.Instance.WidthValue);
@@ -163,6 +243,8 @@ public class GameScript : MonoBehaviour
         p2.GetComponent<PlayerScript>().InitialPositionPlayer(board.GetTile(randomPosWidthP2, randomPosheigthP2), randomPosWidthP2, randomPosheigthP2);
         players[1] = p2;
         cam.Follow = players[0].transform;
+        gameCanvas.Player1UI(p1.GetComponent<PlayerScript>());
+        gameCanvas.Player2UI(p2.GetComponent<PlayerScript>());
     }
 
     void ChangeCamFollow()
@@ -176,9 +258,9 @@ public class GameScript : MonoBehaviour
             cam.Follow = players[1].transform;
         }
     }
-
     public void ChangeTurn()
     {
+        
         if (turno == TurnoEnum.Player1)
         {
             playerTurn = 1;
@@ -191,5 +273,18 @@ public class GameScript : MonoBehaviour
             turno = TurnoEnum.Player1;
         }
         players[playerTurn].GetComponent<PlayerScript>().InitiatePersonTurn();
+
+    }
+
+
+
+    public void ReiniciarPartida()
+    {
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void MenuGame()
+    {
+        SceneManager.LoadScene("MenuScene");
     }
 }

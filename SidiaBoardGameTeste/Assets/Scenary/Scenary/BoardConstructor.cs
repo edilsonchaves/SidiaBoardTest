@@ -38,20 +38,38 @@ public class BoardConstructor : MonoBehaviour
                 }
                 else
                 {
-                    if (randomNumber < 90)
-                    {
-                        tileInstantiate.GetComponent<TileScript>().ConfigColectable(colectablesScriptable[2]);
-                    }
-                    else
-                    {
-                        tileInstantiate.GetComponent<TileScript>().ConfigColectable(colectablesScriptable[3]);
-                    }
+                    tileInstantiate.GetComponent<TileScript>().ConfigColectable(colectablesScriptable[2]);
                 }
                 tileBoard.Add(tileInstantiate);
             }
         }
     }
 
+    public void refillTileColectable()
+    {
+        foreach (GameObject tile in tileBoard)
+        {
+            if (tile.gameObject.transform.childCount == 1)
+            {
+                int randomNumber = Random.Range(0, 101);
+                if (randomNumber < 60)
+                {
+                    if (randomNumber < 30)
+                    {
+                        tile.GetComponent<TileScript>().ConfigColectable(colectablesScriptable[0]);
+                    }
+                    else
+                    {
+                        tile.GetComponent<TileScript>().ConfigColectable(colectablesScriptable[1]);
+                    }
+                }
+                else
+                {
+                    tile.GetComponent<TileScript>().ConfigColectable(colectablesScriptable[2]);
+                }
+            }
+        }
+    }
     public void RemoveColectablePosition(int PosWidht, int PosHeigth)
     {
 

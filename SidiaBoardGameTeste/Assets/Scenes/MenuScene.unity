@@ -585,6 +585,7 @@ MonoBehaviour:
   sliderHeight: {fileID: 1124411119}
   valueTextWidth: {fileID: 738428654}
   valueTextHeight: {fileID: 1835860146}
+  toggleMusic: {fileID: 690407652}
 --- !u!1 &496764539
 GameObject:
   m_ObjectHideFlags: 0

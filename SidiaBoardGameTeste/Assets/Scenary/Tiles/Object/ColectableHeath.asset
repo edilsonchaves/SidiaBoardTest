@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ColectableHeath
   m_EditorClassIdentifier: 
   typeColectable: 2
-  forcaEfeito: 4
+  forcaEfeito: 1
   colorTileColectable: {r: 0.65168536, g: 1, b: 0, a: 0}

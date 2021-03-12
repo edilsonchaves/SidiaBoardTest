@@ -10,6 +10,8 @@ public class TileScript : MonoBehaviour
 
     [SerializeField] Color defaultColor;
     [SerializeField] MeshRenderer meshRendererIntern;
+    [SerializeField] ParticleSystem particles;
+    public AudioSource audioTile;
     public void ConfigTile(int valueWidth, int valueHeight)
     {
         widthPos = valueWidth;
@@ -39,12 +41,18 @@ public class TileScript : MonoBehaviour
     }
     public Colectable GetColectable()
     {
+        
         return colectable;
+    }
+    public void PlayParticleGetColectable()
+    {
+        particles.Play();
     }
     public void RemoveColectable()
     {
+        
         colectable = null;
-        meshRendererIntern.material.color = default;
+        meshRendererIntern.material.color = defaultColor;
     }
 
     public int GetWidth()

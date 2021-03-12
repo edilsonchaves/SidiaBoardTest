@@ -8,7 +8,7 @@ public class OptionCanvas : MonoBehaviour
     [SerializeField] Slider sliderHeight;
     [SerializeField] Text valueTextWidth;
     [SerializeField] Text valueTextHeight;
-
+    public Toggle toggleMusic;
 
     private void Start()
     {
@@ -20,6 +20,11 @@ public class OptionCanvas : MonoBehaviour
     {
         ValueTextWidth();
         ValueTextHeight();
+        ToggleMusic();
+    }
+    public void ToggleMusic()
+    {
+        ManagerGame.Instance.IsMusic = toggleMusic.isOn;
     }
     public void ValueTextWidth()
     {
