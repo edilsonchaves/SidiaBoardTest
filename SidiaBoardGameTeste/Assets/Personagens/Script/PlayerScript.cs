@@ -4,14 +4,56 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Player Data")]
     public Player playerData;
     public MeshRenderer renderObjeto;
+    [SerializeField]int widthPos;
+    [SerializeField]int heigthPos;
+    [Header("Player Movement")]
+    int basicmovementPlayer = 3;
+    [SerializeField]int _currentMovementPlayer;
+    [SerializeField] GameObject destiny;
+    [SerializeField] float velMove;
+    [SerializeField] bool _isMove;
+    public bool IsMove
+    {
+        get
+        {
+            return _isMove;
+        }
+        set
+        {
+            _isMove = value;
+        }
+    }
+    public int CurrentMovementPlayer
+    {
+        get
+        {
+            return _currentMovementPlayer;
+        }
+        set
+        {
+            Debug.Log(value);
+            _currentMovementPlayer = value;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
+        velMove = 5;
     }
     private void Update()
     {
+        if (_isMove)
+        {
+            this.transform.position = Vector3.MoveTowards(this.transform.position, destiny.transform.position, velMove * Time.deltaTime);
+            if (Vector3.Distance(this.transform.position, destiny.transform.position) == 0)
+            {
+                IsMove = false;
+                destiny = null;
+            }
+        }
     }
     public void initiatePerson(Player newPlayerData)
     {
@@ -30,11 +72,32 @@ public class PlayerScript : MonoBehaviour
         playerData.InitializePlayer();
         renderObjeto.material.color = playerData.PlayerColor;
     }
-
-    public void InitialPositionPlayer(Transform tilePosition)
+    public void InitialPositionPlayer(Transform tilePosition, int widthPosition, int heigthPostion)
     {
         gameObject.transform.SetParent(tilePosition);
         gameObject.transform.localPosition = Vector3.zero;
+        widthPos = widthPosition;
+        heigthPos = heigthPostion;
+    }
+    public void InitiatePersonTurn()
+    {
+        _currentMovementPlayer = basicmovementPlayer;
+    }
+    public int GetWidth()
+    {
+        return widthPos;
+    }
+    public int GetHeigth()
+    {
+        return heigthPos;
+    }
+
+    public void setDestinyPlayer (GameObject newDestiny)
+    {
+        destiny = newDestiny;
+        _isMove = true;
+        widthPos = newDestiny.GetComponent<TileScript>().GetWidth();
+        heigthPos = newDestiny.GetComponent<TileScript>().GetHeigth();
     }
 }
 

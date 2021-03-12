@@ -46,6 +46,15 @@ public class TileScript : MonoBehaviour
         colectable = null;
         meshRendererIntern.material.color = default;
     }
+
+    public int GetWidth()
+    {
+        return widthPos;
+    }
+    public int GetHeigth()
+    {
+        return heigthPos;
+    }
 }
 [System.Serializable]
 public class Colectable

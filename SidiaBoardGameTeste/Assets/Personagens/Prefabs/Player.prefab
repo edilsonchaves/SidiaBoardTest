@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -43,3 +43,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc9a42225e98e743b95d945f851aac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerData:
+    _name: 
+    _healthInitial: 0
+    _attackInitial: 0
+    _playerColor: {r: 0, g: 0, b: 0, a: 0}
+    _rendererPlayer: {fileID: 0}
+    _currentHealth: 0
+  renderObjeto: {fileID: 0}

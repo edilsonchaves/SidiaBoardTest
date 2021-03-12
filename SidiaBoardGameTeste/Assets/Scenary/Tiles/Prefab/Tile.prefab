@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 6995879563573079492}
   - component: {fileID: 6995879563573079499}
   - component: {fileID: 6995879563573079498}
-  - component: {fileID: 6995879563573079497}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Intern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,20 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6995879563573079497
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6995879563573079496}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &6995879564555812575
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,9 +90,9 @@ GameObject:
   - component: {fileID: 6995879564555812571}
   - component: {fileID: 6995879564555812570}
   - component: {fileID: 6995879564555812569}
-  - component: {fileID: 6995879564555812568}
   - component: {fileID: -78939187094719218}
-  m_Layer: 0
+  - component: {fileID: 6356543055018896204}
+  m_Layer: 8
   m_Name: Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,20 +161,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6995879564555812568
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6995879564555812575}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &-78939187094719218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,10 +175,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   widthPos: 0
   heigthPos: 0
-  defaultColor: {r: 0, g: 0.21568628, b: 1, a: 0}
   colectable:
     typeColectable: 
     rarity: 0
     forceEffect: 0
     colorTileColectable: {r: 0, g: 0, b: 0, a: 0}
+  defaultColor: {r: 0, g: 0.21568628, b: 1, a: 0}
   meshRendererIntern: {fileID: 6995879563573079498}
+--- !u!65 &6356543055018896204
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6995879564555812575}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
